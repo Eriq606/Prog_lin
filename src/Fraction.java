@@ -2,6 +2,10 @@ public class Fraction {
     int numerateur, denominateur;
     public Fraction(){
     }
+    public Fraction(int num){
+        setNumerateur(num);
+        setDenominateur(1);
+    }
     public Fraction(int num, int den){
         setNumerateur(num);
         setDenominateur(den);

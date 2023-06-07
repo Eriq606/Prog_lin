@@ -83,6 +83,15 @@ public class MatriceFraction {
         }
         return max;
     }
+    public int getMinOnLigne(int numLigne){
+        int min=0;
+        for(int i=1; i<nbColonnes; i++){
+            if(valeurs[numLigne][i].getValue()<valeurs[numLigne][min].getValue()){
+                min=i;
+            }
+        }
+        return min;
+    }
     public int getLigneOptimale(int numColonne){
         int minLigne=0;
         Fraction min,div;
@@ -115,6 +124,15 @@ public class MatriceFraction {
             maximise();
         }
     }
+    public void minimise(){
+        int optColonne=getMinOnLigne(nbLignes-1);
+        double val=valeurs[nbLignes-1][optColonne].getValue();
+        if(val<0){
+            int optLigne=getLigneOptimale(optColonne);
+            optimise(optLigne, optColonne);
+            maximise();
+        }
+    }
     public int[] getIndicesNuls(int nbBase){
         int[] indices=new int[nbBase];
         int indice=0;
@@ -133,39 +151,5 @@ public class MatriceFraction {
             bases[i]=coeffs[indices[i]];
         }
         return bases;
-    }
-    public MatriceFraction getMatriceArtificielle(){
-        int nbEcart=getNbLignes()-1;
-        MatriceFraction nouveau=new MatriceFraction(getNbLignes(), getNbColonnes()+nbEcart, getNbCoeff());
-        Fraction M=new Fraction(50000, 1);
-        for(int i=0; i<getNbLignes()-1; i++){
-            for(int j=0; j<getNbColonnes()-1; j++){
-                nouveau.valeurs[i][j]=valeurs[i][j];
-            }
-            for(int j=getNbColonnes()-1; j<nouveau.valeurs[i].length-1; j++){
-                if(j-getNbColonnes()+1==i){
-                    nouveau.valeurs[i][j]=new Fraction(1, 1);
-                    continue;
-                }
-                nouveau.valeurs[i][j]=new Fraction(0, 1);
-            }
-            nouveau.valeurs[i][nouveau.valeurs[i].length-1]=valeurs[i][getNbColonnes()-1];
-        }
-        for(int i=0; i<getNbColonnes()-1; i++){
-            Fraction sum=new Fraction(0, 1);
-            for(int j=0; j<getNbLignes()-1; j++){
-                sum=sum.addition(valeurs[j][i]);
-            }
-            nouveau.valeurs[getNbLignes()-1][i]=valeurs[getNbLignes()-1][i].addition(sum.multiply(M));
-        }
-        for(int i=getNbColonnes()-1; i<nouveau.valeurs[0].length; i++){
-            nouveau.valeurs[getNbLignes()-1][i]=new Fraction(0, 1);
-        }
-        Fraction sum=new Fraction(0, 1);
-        for(int i=0; i<getNbLignes()-1; i++){
-            sum=sum.addition(valeurs[i][getNbColonnes()-1]);
-        }
-        nouveau.valeurs[getNbLignes()-1][nouveau.getNbColonnes()-1]=valeurs[getNbLignes()-1][getNbColonnes()-1].addition(sum.multiply(M));
-        return nouveau;
     }
 }
