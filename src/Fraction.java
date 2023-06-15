@@ -2,6 +2,11 @@ public class Fraction {
     int numerateur, denominateur;
     public Fraction(){
     }
+    public static void afficher(int... tabInt){
+        for(int i:tabInt){
+            System.out.println(i);
+        }
+    }
     public Fraction(int num){
         setNumerateur(num);
         setDenominateur(1);
@@ -66,6 +71,7 @@ public class Fraction {
             if(num_val==0&&den_val==0){
                 numerateur=num_div;
                 denominateur=den_div;
+                break;
             }
         }
     }

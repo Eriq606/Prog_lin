@@ -1,14 +1,17 @@
-import java.util.LinkedList;
-
 public class MatriceFraction {
     Fraction[][] valeurs;
-    int nbLignes,nbColonnes,nbCoeff;
-    
-    public MatriceFraction(int nbLignes, int nbColonnes, int nbC) {
-        this.nbLignes = nbLignes;
-        this.nbColonnes = nbColonnes;
-        this.nbCoeff=nbC;
-        setValeurs(new Fraction[nbLignes][nbColonnes]);
+    int nbLignes,nbColonnes;
+    public MatriceFraction(int[][] lignes){
+        setNbLignes(lignes.length);
+        setNbColonnes(lignes[0].length);
+        setValeurs(new Fraction[getNbLignes()][getNbColonnes()]);
+        for(int k=0; k<getNbLignes(); k++){
+            Fraction[] ligne=new Fraction[getNbColonnes()];
+            for(int i=0; i<getNbColonnes(); i++){
+                ligne[i]=new Fraction(lignes[k][i]);
+            }
+            modifLigne(k, ligne);
+        }
     }
     public Fraction[][] getValeurs() {
         return valeurs;
@@ -27,12 +30,6 @@ public class MatriceFraction {
     }
     public void setNbColonnes(int nbColonnes) {
         this.nbColonnes = nbColonnes;
-    }
-    public int getNbCoeff() {
-        return nbCoeff;
-    }
-    public void setNbCoeff(int nbCoeff) {
-        this.nbCoeff = nbCoeff;
     }
     
     public void modifLigne(int numLigne, Fraction[] nouvelle){
@@ -130,7 +127,7 @@ public class MatriceFraction {
         if(val<0){
             int optLigne=getLigneOptimale(optColonne);
             optimise(optLigne, optColonne);
-            maximise();
+            minimise();
         }
     }
     public int[] getIndicesNuls(int nbBase){
