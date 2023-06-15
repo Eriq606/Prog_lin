@@ -93,6 +93,14 @@ public class MatriceFraction {
         int minLigne=0;
         Fraction min,div;
         for(int i=1; i<nbLignes-1; i++){
+            if(valeurs[minLigne][numColonne].numerateur<=0){
+                minLigne++;
+                i--;
+                continue;
+            }
+            if(valeurs[i][numColonne].numerateur<=0){
+                continue;
+            }
             div=valeurs[i][nbColonnes-1].divide(valeurs[i][numColonne]);
             min=valeurs[minLigne][nbColonnes-1].divide(valeurs[minLigne][numColonne]);
             if(div.getValue()<min.getValue()&&div.getValue()>0){
@@ -118,6 +126,7 @@ public class MatriceFraction {
         if(val>0){
             int optLigne=getLigneOptimale(optColonne);
             optimise(optLigne, optColonne);
+            System.out.println(toString());
             maximise();
         }
     }
