@@ -1,7 +1,9 @@
 public class MatriceFraction {
     Fraction[][] valeurs;
     int nbLignes,nbColonnes;
-    public MatriceFraction(int[][] lignes){
+    String[] coeffs;
+    int[] bases;
+    public MatriceFraction(int[][] lignes, String[] coeffs){
         setNbLignes(lignes.length);
         setNbColonnes(lignes[0].length);
         setValeurs(new Fraction[getNbLignes()][getNbColonnes()]);
@@ -12,6 +14,19 @@ public class MatriceFraction {
             }
             modifLigne(k, ligne);
         }
+        setCoeffs(coeffs);
+    }
+    public int[] getBases() {
+        return bases;
+    }
+    public void setBases(int[] bases) {
+        this.bases = bases;
+    }
+    public String[] getCoeffs() {
+        return coeffs;
+    }
+    public void setCoeffs(String[] coeffs) {
+        this.coeffs = coeffs;
     }
     public Fraction[][] getValeurs() {
         return valeurs;
@@ -43,10 +58,10 @@ public class MatriceFraction {
     public String toString(){
         String display="";
         for(int i=0; i<nbLignes; i++){
-            for(int j=0; j<nbColonnes; j++){
-                display+=valeurs[i][j].toString()+" ";
+            for(int j=0; j<nbColonnes-1; j++){
+                display+=valeurs[i][j].toString()+" || ";
             }
-            display+="\n";
+            display+=valeurs[i][nbColonnes-1].toString()+" || \n";
         }
         return display;
     }
@@ -73,7 +88,7 @@ public class MatriceFraction {
     }
     public int getMaxOnLigne(int numLigne){
         int max=0;
-        for(int i=1; i<nbColonnes; i++){
+        for(int i=1; i<nbColonnes-1; i++){
             if(valeurs[numLigne][i].getValue()>valeurs[numLigne][max].getValue()){
                 max=i;
             }
@@ -82,7 +97,7 @@ public class MatriceFraction {
     }
     public int getMinOnLigne(int numLigne){
         int min=0;
-        for(int i=1; i<nbColonnes; i++){
+        for(int i=1; i<nbColonnes-1; i++){
             if(valeurs[numLigne][i].getValue()<valeurs[numLigne][min].getValue()){
                 min=i;
             }
@@ -93,12 +108,12 @@ public class MatriceFraction {
         int minLigne=0;
         Fraction min,div;
         for(int i=1; i<nbLignes-1; i++){
-            if(valeurs[minLigne][numColonne].numerateur<=0){
+            if(valeurs[minLigne][numColonne].numerateur<=0||valeurs[minLigne][numColonne].denominateur<=0){
                 minLigne++;
                 i--;
                 continue;
             }
-            if(valeurs[i][numColonne].numerateur<=0){
+            if(valeurs[i][numColonne].numerateur<=0||valeurs[i][numColonne].denominateur<=0){
                 continue;
             }
             div=valeurs[i][nbColonnes-1].divide(valeurs[i][numColonne]);
@@ -125,6 +140,7 @@ public class MatriceFraction {
         double val=valeurs[nbLignes-1][optColonne].getValue();
         if(val>0){
             int optLigne=getLigneOptimale(optColonne);
+            getBases()[optLigne]=optColonne;
             optimise(optLigne, optColonne);
             System.out.println(toString());
             maximise();
@@ -135,7 +151,9 @@ public class MatriceFraction {
         double val=valeurs[nbLignes-1][optColonne].getValue();
         if(val<0){
             int optLigne=getLigneOptimale(optColonne);
+            getBases()[optLigne]=optColonne;
             optimise(optLigne, optColonne);
+            System.out.println(toString());
             minimise();
         }
     }
@@ -143,18 +161,17 @@ public class MatriceFraction {
         int[] indices=new int[nbBase];
         int indice=0;
         for(int i=0; i<getNbColonnes(); i++){
-            if(getValeurs()[getNbLignes()-1][i].numerateur==0){
+            if(getValeurs()[getNbLignes()-1][i].numerateur==0&&indice<nbBase){
                 indices[indice]=i;
                 indice++;
             }
         }
         return indices;
     }
-    public String[] getNomBases(String[] coeffs, int nbBase){
-        int[] indices=getIndicesNuls(nbBase);
-        String[] bases=new String[nbBase];
-        for(int i=0; i<nbBase; i++){
-            bases[i]=coeffs[indices[i]];
+    public String[] getNomBases(){
+        String[] bases=new String[getBases().length];
+        for(int i=0; i<bases.length; i++){
+            bases[i]=getCoeffs()[getBases()[i]];
         }
         return bases;
     }
